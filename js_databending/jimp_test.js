@@ -1,4 +1,5 @@
-var Jimp = require('jimp');
+const Jimp = require('jimp');
+const math = require('mathjs')
 
 
 function invert(color) {
