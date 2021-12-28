@@ -1,5 +1,3 @@
-console.log('Hello World  (start of js file)');
-
 // Get Canvas
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext('2d');
@@ -17,6 +15,10 @@ var invert = function() {
 };
 
 var shift = function() {
+    /**
+     Params:
+        shift: total number of pixels to shift by.
+     */
     console.log('Calling shift function');
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     const data = imageData.data
@@ -33,6 +35,55 @@ var shift = function() {
     ctx.putImageData(imageData, 0, 0);
 }
 
+var echo = function() {
+    /**
+     Params:
+        width: the distance ahead that the echo should source from
+        weight: the ratio of the new values that should come from the echo source
+     */
+    console.log('Calling echo function');
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data
+
+    const width = parseInt(imageData.width * 4 / 6);
+    const weight = 0.3;
+    console.log(`Using width of: ${width}`);
+    console.log(`Using weight of: ${weight}`);
+
+    for (var i = 0; i < data.length; i+= 4) {
+        var newind = (i+width) % data.length;
+
+        data[i]   = (data[i]   * (1-weight)) + (data[newind]   * weight);
+        data[i+1] = (data[i+1] * (1-weight)) + (data[newind+1] * weight);
+        data[i+2] = (data[i+2] * (1-weight)) + (data[newind+2] * weight);
+
+        data[i+3] = data[newind+3];
+    }
+    ctx.putImageData(imageData, 0, 0);
+}
+
+var noise = function() {
+    /**
+     Params:
+        width: max of random noise (range 0..2)
+            leads to a range of (0.0 .. 2.0).
+            Greater values are possible, but at that point another noise
+            function can simply be chained behind.
+     */
+    console.log('Calling noise function');
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
+
+    const width = 2;
+
+    for (var i = 0; i < data.length; i += 4) {
+        data[i]   = data[i]   * (1 + ((Math.random() * width) - (width/2)));
+        data[i+1] = data[i+1] * (1 + ((Math.random() * width) - (width/2)));
+        data[i+2] = data[i+2] * (1 + ((Math.random() * width) - (width/2)));
+    }
+    ctx.putImageData(imageData, 0, 0);
+}
+
 // Draw Image
 var img = new Image();
 img.src = 'image.jpg';
@@ -42,9 +93,7 @@ img.onload = function(){
     canvas.height = imageRatio * canvas.width;
 
     ctx.drawImage(this, 0, 0, canvas.width, canvas.height);
-    // img.setAttribute('crossOrigin', '')
 
-    console.log('Collecting data...');
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     console.log(imageData);
 }
