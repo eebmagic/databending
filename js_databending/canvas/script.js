@@ -50,14 +50,9 @@ var echo = function() {
     console.log(`Using width of: ${width}`);
     console.log(`Using weight of: ${weight}`);
 
-    for (var i = 0; i < data.length; i+= 4) {
+    for (var i = 0; i < data.length; i += 1) {
         var newind = (i+width) % data.length;
-
-        data[i]   = (data[i]   * (1-weight)) + (data[newind]   * weight);
-        data[i+1] = (data[i+1] * (1-weight)) + (data[newind+1] * weight);
-        data[i+2] = (data[i+2] * (1-weight)) + (data[newind+2] * weight);
-
-        data[i+3] = data[newind+3];
+        data[i] = (data[i] * (1-weight)) + (data[newind] * weight);
     }
     ctx.putImageData(imageData, 0, 0);
 }
@@ -74,7 +69,7 @@ var noise = function() {
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     const data = imageData.data;
 
-    const width = 2;
+    const width = 0.3;
 
     for (var i = 0; i < data.length; i += 4) {
         data[i]   = data[i]   * (1 + ((Math.random() * width) - (width/2)));
